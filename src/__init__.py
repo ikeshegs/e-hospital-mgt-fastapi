@@ -1,33 +1,26 @@
 from fastapi import FastAPI
-from contextlib import asynccontextmanager
 
 from src.staff.router import staff_router
-from src.database import init_db
-
-
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    await init_db()
 
 
 version = "v1"
+api_url_prefix = f"/api/{version}"
 
 app = FastAPI(
-    title="Electronic Hospital Resources Management",
-    description="Electronic",
+    title="Electronic Hospital Resource Management",
+    description="Electronic Hospital Resource Management App manages and improves the performance of activities in the hospital.",
     version=version,
     docs_url=f"/api/{version}/docs",
     redoc_url=f"/api/{version}/redoc",
     openapi_url=f"/api/{version}/openapi.json",
-    lifespan=lifespan,
     contact={
         "name": "Ikechukwu Okoro",
         "email": "ikeshegs@gmail.com"
     }
 )
 
-@app.get("/")
+@app.get("f{api_url_prefix}")
 async def root():
-    return {"message": "Welcome to E-Hospital Management System"}
+    return {"message": "Welcome to Electronic Hospital Resource Management App"}
 
-app.include_router(staff_router, prefix=f"/api/{version}/staff", tags=["Staff"])
+app.include_router(staff_router, prefix=f"{api_url_prefix}/staff", tags=["Staff"])
