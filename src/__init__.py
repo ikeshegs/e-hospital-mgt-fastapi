@@ -4,10 +4,11 @@ from src.staff.router import staff_router
 
 
 version = "v1"
+api_url_prefix = f"/api/{version}"
 
 app = FastAPI(
-    title="Electronic Hospital Resources Management",
-    description="Electronic",
+    title="Electronic Hospital Resource Management",
+    description="Electronic Hospital Resource Management App manages and improves the performance of activities in the hospital.",
     version=version,
     docs_url=f"/api/{version}/docs",
     redoc_url=f"/api/{version}/redoc",
@@ -18,8 +19,8 @@ app = FastAPI(
     }
 )
 
-@app.get("/")
+@app.get("f{api_url_prefix}")
 async def root():
-    return {"message": "Welcome to E-Hospital Management System"}
+    return {"message": "Welcome to Electronic Hospital Resource Management App"}
 
-app.include_router(staff_router, prefix=f"/api/{version}/staff", tags=["Staff"])
+app.include_router(staff_router, prefix=f"{api_url_prefix}/staff", tags=["Staff"])
