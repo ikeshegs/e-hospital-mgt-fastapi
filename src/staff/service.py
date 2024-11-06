@@ -30,3 +30,9 @@ class StaffService:
         await session.commit()
 
         return new_staff
+    
+
+    async def staff_exists(self, email, session: AsyncSession):
+        staff = await self.get_staff_by_email(email, session)
+
+        return True if staff is not None else False
