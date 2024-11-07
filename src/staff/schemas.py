@@ -34,6 +34,7 @@ class StaffCreateModel(BaseModel):
 class StaffModel(BaseModel):
     uid: uuid.uuid5
     staff_id: str
+    id: int
     first_name: str
     last_name: str
     middle_name: str

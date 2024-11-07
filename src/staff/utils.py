@@ -1,6 +1,17 @@
 import random
 import string
 
+from sqlmodel import select
+from sqlmodel.ext.asyncio.session import AsyncSession
+
+from .models import Staff
+
+
+async def check_random_number(staff_id, session: AsyncSession) -> bool:
+    statement = select(Staff).where(Staff.id == id)
+
+    result = await session.exec(statement)
+
 
 def get_random_number() -> int:
     random_number = random.randint(1, 1000)

@@ -30,7 +30,8 @@ class StaffService:
         '''
 
         random_number = get_random_number()
-        new_staff.staff_id = f"EMHS/{random_number}"
+        new_staff.id = random_number
+        new_staff.staff_id = f"EMHS-{random_number}"
 
         session.add(new_staff)
 
