@@ -8,7 +8,6 @@ class StaffCreateModel(BaseModel):
     last_name: str
     middle_name: str | None = ""
     email: str
-    password: str = Field(min_length=8)
     phone_number: str
     age: int
     sex: str
@@ -22,7 +21,6 @@ class StaffCreateModel(BaseModel):
                 "last_name": "Doe",
                 "middle_name": "Mark",
                 "email": "johndoe123@co.com",
-                "password": "testpass123",
                 "phone_number": "12345678",
                 "age": 23,
                 "sex": "male",

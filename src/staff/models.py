@@ -22,7 +22,7 @@ class Staff(SQLModel, table=True):
     middle_name: Optional[str]
     last_name: str
     email: str
-    password: str = Field(exclude=True)
+    password: str = Field(exclude=True, min_length=8)
     phone_number: str
     sex: str
     age: int

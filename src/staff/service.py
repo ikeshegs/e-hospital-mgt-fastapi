@@ -3,7 +3,7 @@ from sqlmodel import select
 
 from .models import Staff
 from .schemas import StaffCreateModel
-from .utils import get_random_number
+from .utils import get_random_number, generate_random_password
 
 
 class StaffService:
@@ -21,6 +21,9 @@ class StaffService:
         staff_data_dict = staff_data.model_dump()
 
         new_staff = Staff(**staff_data_dict)
+
+        password = generate_random_password()
+        new_staff.password = password
 
         '''
         hash staff password
