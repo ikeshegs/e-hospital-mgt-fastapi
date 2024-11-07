@@ -3,10 +3,11 @@ from sqlmodel import select
 
 from .models import Staff
 from .schemas import StaffCreateModel
+from .utils import get_random_number
 
 
 class StaffService:
-    async def get_staff_by_email(self, email: str, session: AsyncSession):
+    async def get_staff_by_email(email: str, session: AsyncSession):
         statement = select(Staff).where(Staff.email == email)
 
         result = await session.exec(statement)
@@ -16,7 +17,7 @@ class StaffService:
         return staff_data
     
 
-    async def create_staff(self, staff_data: StaffCreateModel, session: AsyncSession):
+    async def create_staff(staff_data: StaffCreateModel, session: AsyncSession):
         staff_data_dict = staff_data.model_dump()
 
         new_staff = Staff(**staff_data_dict)
@@ -25,6 +26,9 @@ class StaffService:
         hash staff password
         '''
 
+        random_number = get_random_number()
+        new_staff.staff_id = f"EMHS/{random_number}"
+
         session.add(new_staff)
 
         await session.commit()
@@ -32,7 +36,7 @@ class StaffService:
         return new_staff
     
 
-    async def staff_exists(self, email, session: AsyncSession):
-        staff = await self.get_staff_by_email(email, session)
+    async def staff_exists(email, session: AsyncSession):
+        staff = await StaffService.get_staff_by_email(email, session)
 
         return True if staff is not None else False

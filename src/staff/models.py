@@ -1,24 +1,25 @@
 import uuid
 import sqlalchemy.dialects.postgresql as pg
+from typing import Optional
 
 from sqlmodel import SQLModel, Field, Column
 from datetime import datetime
 
 
 class Staff(SQLModel, table=True):
-    __tablename__="staff"
+    __tablename__ = "staff"
 
-    uid: uuid.uuid5 = Field(
+    sid: uuid.UUID = Field(
         sa_column=Column(
             pg.UUID,
             nullable=False,
             primary_key=True,
-            default_factory=uuid.uuid5
+            default=uuid.uuid4
         )
     )
     staff_id: str
     first_name: str
-    middle_name: str
+    middle_name: Optional[str]
     last_name: str
     email: str
     password: str = Field(exclude=True)

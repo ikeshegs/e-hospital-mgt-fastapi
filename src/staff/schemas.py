@@ -6,10 +6,10 @@ from pydantic import BaseModel, Field
 class StaffCreateModel(BaseModel):
     first_name: str
     last_name: str
-    middle_name: str
+    middle_name: str | None = ""
     email: str
     password: str = Field(min_length=8)
-    phone_no: str
+    phone_number: str
     age: int
     sex: str
     department: str
@@ -23,7 +23,7 @@ class StaffCreateModel(BaseModel):
                 "middle_name": "Mark",
                 "email": "johndoe123@co.com",
                 "password": "testpass123",
-                "phone_no": 12345678,
+                "phone_number": "12345678",
                 "age": 23,
                 "sex": "male",
                 "department": "Medical Doctor",
