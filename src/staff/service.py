@@ -3,7 +3,7 @@ from sqlmodel import select
 
 from .models import Staff
 from .schemas import StaffCreateModel
-from .utils import get_random_number, generate_random_password
+from .utils import get_random_number, generate_random_password, staff_id_exists
 
 
 class StaffService:
@@ -29,9 +29,11 @@ class StaffService:
         hash staff password
         '''
 
+        '''
+        Write a loop/function to ensure that the same random number doesn't get assigned to multiple staffs
+        '''
         random_number = get_random_number()
-        new_staff.id = random_number
-        new_staff.staff_id = f"EMHS-{random_number}"
+        new_staff.staff_id = random_number
 
         session.add(new_staff)
 

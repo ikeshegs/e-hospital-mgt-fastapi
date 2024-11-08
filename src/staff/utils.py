@@ -7,14 +7,18 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from .models import Staff
 
 
-async def check_random_number(staff_id, session: AsyncSession) -> bool:
-    statement = select(Staff).where(Staff.id == id)
+async def staff_id_exists(staff_id: int, session: AsyncSession) -> bool:
+    statement = select(Staff.staff_id).where(Staff.staff_id == staff_id)
 
     result = await session.exec(statement)
 
+    id = result.first()
+
+    return True if id else False
+
 
 def get_random_number() -> int:
-    random_number = random.randint(1, 1000)
+    random_number = random.randint(1, 9999)
     return random_number
 
 

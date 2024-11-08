@@ -17,8 +17,7 @@ class Staff(SQLModel, table=True):
             default=uuid.uuid4
         )
     )
-    staff_id: str
-    id: int
+    staff_id: int
     first_name: str
     middle_name: Optional[str]
     last_name: str
