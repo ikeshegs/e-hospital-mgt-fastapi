@@ -3,7 +3,7 @@ from sqlmodel import select
 
 from .models import Staff
 from .schemas import StaffCreateModel
-from .utils import get_random_number, generate_random_password, staff_id_exists
+from .utils import get_random_number, generate_random_password, get_password_hash
 
 
 class StaffService:
@@ -23,11 +23,10 @@ class StaffService:
         new_staff = Staff(**staff_data_dict)
 
         password = generate_random_password()
-        new_staff.password = password
 
-        '''
-        hash staff password
-        '''
+        # hash password
+        hashed_password = get_password_hash(password)
+        new_staff.password = hashed_password
 
         '''
         Write a loop/function to ensure that the same random number doesn't get assigned to multiple staffs
