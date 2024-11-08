@@ -9,7 +9,7 @@ from datetime import datetime
 class Staff(SQLModel, table=True):
     __tablename__ = "staff"
 
-    sid: uuid.UUID = Field(
+    uid: uuid.UUID = Field(
         sa_column=Column(
             pg.UUID,
             nullable=False,
@@ -17,7 +17,7 @@ class Staff(SQLModel, table=True):
             default=uuid.uuid4
         )
     )
-    staff_id: str
+    staff_id: int
     first_name: str
     middle_name: Optional[str]
     last_name: str
