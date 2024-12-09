@@ -43,5 +43,6 @@ class StaffModel(BaseModel):
     age: int
     sex: str
     is_verified: bool
+    is_admin: bool
     department: str
     role: str

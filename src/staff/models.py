@@ -27,6 +27,7 @@ class Staff(SQLModel, table=True):
     sex: str
     age: int
     is_verified: bool = Field(default=False)
+    is_admin: bool = Field(default=False)
     department: str
     role: str
     created_at: datetime = Field(
