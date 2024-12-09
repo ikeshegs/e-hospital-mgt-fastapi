@@ -53,3 +53,15 @@ class StaffService:
         result = await session.exec(statement)
 
         return result.all()
+    
+
+    async def get_one_staff(staff_uid: str, session: AsyncSession):
+        statement = select(Staff).where(Staff.uid == staff_uid)
+
+        result = await session.exec(statement)
+
+        staff = result.first()
+
+        return staff if staff is not None else None
+
+
