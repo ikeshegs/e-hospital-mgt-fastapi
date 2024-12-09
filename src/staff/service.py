@@ -48,7 +48,7 @@ class StaffService:
     
 
     async def get_all_staffs(session: AsyncSession):
-        statement = select(Staff)
+        statement = select(Staff).limit(10)
 
         result = await session.exec(statement)
 
