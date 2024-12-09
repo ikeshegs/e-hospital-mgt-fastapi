@@ -1,5 +1,5 @@
 from sqlmodel.ext.asyncio.session import AsyncSession
-from sqlmodel import select
+from sqlmodel import desc, select
 
 from .models import Staff
 from .schemas import StaffCreateModel
@@ -45,3 +45,11 @@ class StaffService:
         staff = await StaffService.get_staff_by_email(email, session)
 
         return True if staff is not None else False
+    
+
+    async def get_all_staffs(session: AsyncSession):
+        statement = select(Staff)
+
+        result = await session.exec(statement)
+
+        return result.all()
