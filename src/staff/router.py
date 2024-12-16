@@ -1,6 +1,7 @@
 from typing import Optional, List
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel.ext.asyncio.session import AsyncSession
+from fastapi.responses import JSONResponse
 
 from .schemas import StaffModel, StaffCreateModel
 from src.database import get_session
@@ -36,15 +37,30 @@ async def create_staff(
     }
 
 
-@staff_router.get("/all-staffs", status_code=status.HTTP_200_OK)
-async def get_all_staffs(session: AsyncSession = Depends(get_session)):
-    all_staffs = await staff_service.get_all_staffs(session)
+@staff_router.get("/{role_name}")
+async def get_all_role_staff(role_name: str, session: AsyncSession = Depends(get_session)):
+    staffs_in_role = await staff_service.get_all_staffs_in_a_role(role_name, session)
 
-    return all_staffs
+    if staffs_in_role is None:
+        return JSONResponse(
+            status_code=status.HTTP_200_OK,
+            content={
+                "message": "Sorry, no Staff in this department yet."
+            }
+        )
+    else:    
+        return staffs_in_role
 
 
-@staff_router.get("/{staff_uid}", response_model=List[StaffModel])
+@staff_router.get("/s/{staff_uid}")
 async def get_staff(staff_uid: str, session: AsyncSession = Depends(get_session)):
     staff = await staff_service.get_one_staff(staff_uid, session)
 
     return staff
+
+
+@staff_router.get("/all-staff", status_code=status.HTTP_200_OK)
+async def get_all_staffs(session: AsyncSession = Depends(get_session)):
+    all_staffs = await staff_service.get_all_staffs(session)
+
+    return all_staffs

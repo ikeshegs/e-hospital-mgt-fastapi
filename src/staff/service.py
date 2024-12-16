@@ -1,3 +1,4 @@
+from datetime import datetime
 from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlmodel import desc, select
 
@@ -27,6 +28,17 @@ class StaffService:
         # hash password
         hashed_password = get_password_hash(password)
         new_staff.password = hashed_password
+
+        # convert string to lowercase
+        lowercase_role = new_staff.role.lower()
+        new_staff.role = lowercase_role
+
+        lowercase_department = new_staff.department.lower()
+        new_staff.department = lowercase_department
+
+        # convert DOB string to DateTime object
+        new_dob = datetime.strptime(new_staff.dob, '%d/%m/%Y').date()
+        new_staff.dob = new_dob
 
         '''
         Write a loop/function to ensure that the same random number doesn't get assigned to multiple staffs
@@ -65,3 +77,15 @@ class StaffService:
         return staff if staff is not None else None
 
 
+    async def get_all_staffs_in_a_role(role_name: str, session: AsyncSession):
+        lowercase_role_name = role_name.lower()
+        statement = select(Staff).where(Staff.role == lowercase_role_name)
+
+        result = await session.exec(statement)
+
+        all_role_staffs = result.all()
+
+        if len(all_role_staffs) == 0:
+            return None
+        else:
+            return all_role_staffs
