@@ -52,7 +52,7 @@ async def get_all_role_staff(role_name: str, session: AsyncSession = Depends(get
         return staffs_in_role
 
 
-@staff_router.get("/s/{staff_uid}")
+@staff_router.get("/sid/{staff_uid}")
 async def get_staff(staff_uid: str, session: AsyncSession = Depends(get_session)):
     staff = await staff_service.get_one_staff(staff_uid, session)
 
