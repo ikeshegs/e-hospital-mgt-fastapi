@@ -28,6 +28,13 @@ class StaffService:
         hashed_password = get_password_hash(password)
         new_staff.password = hashed_password
 
+        # convert string to lowercase
+        lowercase_role = new_staff.role.lower()
+        new_staff.role = lowercase_role
+
+        lowercase_department = new_staff.department.lower()
+        new_staff.department = lowercase_department
+
         '''
         Write a loop/function to ensure that the same random number doesn't get assigned to multiple staffs
         '''
@@ -65,3 +72,17 @@ class StaffService:
         return staff if staff is not None else None
 
 
+    async def get_all_department_staff(dept_name: str, session: AsyncSession):
+        lowercase_department_name = dept_name.lower()
+        statement = select(Staff).where(Staff.department == lowercase_department_name)
+
+        result = await session.exec(statement)
+
+        department_staffs = result.all()
+
+        if len(department_staffs) == 0:
+            return None
+        else:
+            return department_staffs
+
+        # return department_staffs if department_staffs is not None else None
