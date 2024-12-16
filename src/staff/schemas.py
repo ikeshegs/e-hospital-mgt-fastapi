@@ -9,7 +9,7 @@ class StaffCreateModel(BaseModel):
     middle_name: str | None = ""
     email: str
     phone_number: str
-    age: int
+    dob: str
     sex: str
     department: str
     role: str
@@ -22,7 +22,7 @@ class StaffCreateModel(BaseModel):
                 "middle_name": "Mark",
                 "email": "johndoe123@co.com",
                 "phone_number": "12345678",
-                "age": 23,
+                "dob": "23/5/2005",
                 "sex": "male",
                 "department": "Medical Doctor",
                 "role": "Dentist"
@@ -40,7 +40,7 @@ class StaffModel(BaseModel):
     email: str
     password: str = Field(exclude=True)
     phone_no: str
-    age: int
+    dob: str
     sex: str
     is_verified: bool
     is_admin: bool

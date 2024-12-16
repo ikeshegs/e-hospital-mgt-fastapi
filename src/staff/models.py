@@ -2,7 +2,7 @@ import uuid
 import sqlalchemy.dialects.postgresql as pg
 from typing import Optional
 
-from sqlmodel import SQLModel, Field, Column
+from sqlmodel import SQLModel, Field, Column, TIMESTAMP
 from datetime import datetime
 
 
@@ -25,20 +25,24 @@ class Staff(SQLModel, table=True):
     password: str = Field(exclude=True, min_length=8)
     phone_number: str
     sex: str
-    age: int
+    dob: datetime = Field(
+        sa_column=Column(
+            TIMESTAMP()
+        )
+    )
     is_verified: bool = Field(default=False)
     is_admin: bool = Field(default=False)
     department: str
     role: str
     created_at: datetime = Field(
         sa_column=Column(
-            pg.TIMESTAMP,
+            TIMESTAMP,
             default=datetime.now
         )
     )
     updated_at: datetime = Field(
         sa_column=Column(
-            pg.TIMESTAMP,
+            TIMESTAMP,
             default=datetime.now
         )
     )

@@ -37,11 +37,11 @@ async def create_staff(
     }
 
 
-@staff_router.get("/{dept_name}")
-async def get_all_department_staff(dept_name: str, session: AsyncSession = Depends(get_session)):
-    department = await staff_service.get_all_department_staff(dept_name, session)
+@staff_router.get("/{role_name}")
+async def get_all_role_staff(role_name: str, session: AsyncSession = Depends(get_session)):
+    staffs_in_role = await staff_service.get_all_staffs_in_a_role(role_name, session)
 
-    if department is None:
+    if staffs_in_role is None:
         return JSONResponse(
             status_code=status.HTTP_200_OK,
             content={
@@ -49,7 +49,7 @@ async def get_all_department_staff(dept_name: str, session: AsyncSession = Depen
             }
         )
     else:    
-        return department
+        return staffs_in_role
 
 
 @staff_router.get("/s/{staff_uid}")
