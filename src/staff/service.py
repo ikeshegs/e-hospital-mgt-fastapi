@@ -3,7 +3,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlmodel import desc, select
 
 from .models import Staff
-from .schemas import StaffCreateModel
+from .schemas import StaffCreateModel, StaffUpdateModel
 from .utils import get_random_number, generate_random_password, get_password_hash
 
 
@@ -30,11 +30,11 @@ class StaffService:
         new_staff.password = hashed_password
 
         # convert string to lowercase
-        lowercase_role = new_staff.role.lower()
-        new_staff.role = lowercase_role
-
         lowercase_department = new_staff.department.lower()
         new_staff.department = lowercase_department
+
+        lowercase_sub_department = new_staff.sub_department.lower()
+        new_staff.sub_department = lowercase_sub_department
 
         # convert DOB string to DateTime object
         new_dob = datetime.strptime(new_staff.dob, '%d/%m/%Y').date()
@@ -59,7 +59,7 @@ class StaffService:
         return True if staff is not None else False
     
 
-    async def get_all_staffs(session: AsyncSession):
+    async def get_all_staff(session: AsyncSession):
         statement = select(Staff).limit(10)
 
         result = await session.exec(statement)
@@ -67,7 +67,7 @@ class StaffService:
         return result.all()
     
 
-    async def get_one_staff(staff_uid: str, session: AsyncSession):
+    async def get_staff(staff_uid: str, session: AsyncSession):
         statement = select(Staff).where(Staff.uid == staff_uid)
 
         result = await session.exec(statement)
@@ -77,15 +77,48 @@ class StaffService:
         return staff if staff is not None else None
 
 
-    async def get_all_staffs_in_a_role(role_name: str, session: AsyncSession):
-        lowercase_role_name = role_name.lower()
-        statement = select(Staff).where(Staff.role == lowercase_role_name)
+    async def get_all_staffs_in_a_department(department_name: str, session: AsyncSession):
+        lowercase_department_name = department_name.lower()
+        statement = select(Staff).where(Staff.department == lowercase_department_name)
 
         result = await session.exec(statement)
 
-        all_role_staffs = result.all()
+        all_department_staffs = result.all()
 
-        if len(all_role_staffs) == 0:
+        if len(all_department_staffs) == 0:
             return None
         else:
-            return all_role_staffs
+            return all_department_staffs
+        
+
+    async def update_staff(
+            staff_uid: str, update_data: StaffUpdateModel, session: AsyncSession):
+        
+        staff_to_update = await StaffService.get_staff(staff_uid, session)
+
+        if staff_to_update is not None:
+            staff_update_data_dict = update_data.model_dump()
+
+            for key, value in staff_update_data_dict.items():
+                setattr(staff_to_update, key, value)
+
+            staff_to_update.updated_at = datetime.now()
+
+            await session.commit()
+
+            return staff_to_update
+        else:
+            return None
+        
+
+    async def delete_staff(staff_uid, session: AsyncSession):
+        staff_to_delete = await StaffService.get_staff(staff_uid, session)
+
+        if staff_to_delete is not None:
+            await session.delete(staff_to_delete)
+
+            await session.commit()
+            
+            return {}
+        else:
+            return None

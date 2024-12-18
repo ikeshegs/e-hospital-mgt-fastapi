@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel.ext.asyncio.session import AsyncSession
 from fastapi.responses import JSONResponse
 
-from .schemas import StaffModel, StaffCreateModel
+from .schemas import StaffModel, StaffCreateModel, StaffUpdateModel
 from src.database import get_session
 from .service import StaffService
 
@@ -37,30 +37,55 @@ async def create_staff(
     }
 
 
-@staff_router.get("/{role_name}")
-async def get_all_role_staff(role_name: str, session: AsyncSession = Depends(get_session)):
-    staffs_in_role = await staff_service.get_all_staffs_in_a_role(role_name, session)
+@staff_router.get("/all", status_code=status.HTTP_200_OK)
+async def get_all_staffs(session: AsyncSession = Depends(get_session)):
+    all_staffs = await staff_service.get_all_staff(session)
 
-    if staffs_in_role is None:
+    return all_staffs
+
+
+@staff_router.get("/{department_name}")
+async def get_all_department_staff(department_name: str, session: AsyncSession = Depends(get_session)):
+    staffs_in_department = await staff_service.get_all_staffs_in_a_department(department_name, session)
+
+    if staffs_in_department is None:
         return JSONResponse(
             status_code=status.HTTP_200_OK,
             content={
-                "message": "Sorry, no Staff in this department yet."
+                "message": "Nothing."
             }
         )
     else:    
-        return staffs_in_role
+        return staffs_in_department
 
 
-@staff_router.get("/s/{staff_uid}")
-async def get_staff(staff_uid: str, session: AsyncSession = Depends(get_session)):
-    staff = await staff_service.get_one_staff(staff_uid, session)
+@staff_router.get("/sid/{staff_uid}", response_model=StaffModel)
+async def get_staff(staff_uid: str, session: AsyncSession = Depends(get_session)) -> dict:
+    staff = await staff_service.get_staff(staff_uid, session)
 
     return staff
 
 
-@staff_router.get("/all-staff", status_code=status.HTTP_200_OK)
-async def get_all_staffs(session: AsyncSession = Depends(get_session)):
-    all_staffs = await staff_service.get_all_staffs(session)
+@staff_router.patch("/sid/{staff_uid}", response_model=StaffModel)
+async def update_staff(
+    staff_uid: str, 
+    staff_update_data: StaffUpdateModel,  
+    session: AsyncSession = Depends(get_session)
+) -> dict:
+    
+    updated_staff = await staff_service.update_staff(staff_uid, staff_update_data, session)
 
-    return all_staffs
+    if updated_staff is None:
+        raise HTTPException(detail="Staff not found", status_code=status.HTTP_404_NOT_FOUND)
+    else:
+        return updated_staff
+    
+
+@staff_router.delete("/sid/{staff_uid}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_staff(staff_uid: str, session: AsyncSession = Depends(get_session)) -> None:
+    staff_to_delete = await staff_service.delete_staff(staff_uid, session)
+
+    if staff_to_delete is None:
+        raise HTTPException(detail="Staff not found", status_code=status.HTTP_404_NOT_FOUND)
+    else:
+        return None

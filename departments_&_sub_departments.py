@@ -1,5 +1,5 @@
 '''
-This file contains the list of departments and the roles under them.
+This file contains the list of departments and the sub-departments.
 '''
 
 roles_departments = {

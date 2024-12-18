@@ -1,5 +1,6 @@
 import uuid
 
+from datetime import datetime
 from pydantic import BaseModel, Field
 
 
@@ -12,7 +13,7 @@ class StaffCreateModel(BaseModel):
     dob: str
     sex: str
     department: str
-    role: str
+    sub_department: str
 
     model_config = {
         "json_schema_extra": {
@@ -25,24 +26,36 @@ class StaffCreateModel(BaseModel):
                 "dob": "23/5/2005",
                 "sex": "male",
                 "department": "Medical Doctor",
-                "role": "Dentist"
+                "sub_department": "Dentist"
             }
         }
     }
 
 
 class StaffModel(BaseModel):
-    uid: uuid.uuid5
+    uid: uuid.UUID
     staff_id: int
     first_name: str
     last_name: str
     middle_name: str
     email: str
     password: str = Field(exclude=True)
-    phone_no: str
-    dob: str
+    phone_number: str
+    dob: datetime
     sex: str
     is_verified: bool
     is_admin: bool
     department: str
-    role: str
+    sub_department: str
+    created_at: datetime
+    updated_at: datetime
+
+
+class StaffUpdateModel(BaseModel):
+    first_name: str
+    last_name: str
+    middle_name: str
+    phone_number: str
+    is_admin: bool
+    department: str
+    sub_department: str
