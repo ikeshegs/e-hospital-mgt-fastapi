@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel.ext.asyncio.session import AsyncSession
 from fastapi.responses import JSONResponse
 
-from .schemas import StaffModel, StaffCreateModel
+from .schemas import StaffModel, StaffCreateModel, StaffUpdateModel
 from src.database import get_session
 from .service import StaffService
 
@@ -53,14 +53,29 @@ async def get_all_role_staff(role_name: str, session: AsyncSession = Depends(get
 
 
 @staff_router.get("/sid/{staff_uid}")
-async def get_staff(staff_uid: str, session: AsyncSession = Depends(get_session)):
-    staff = await staff_service.get_one_staff(staff_uid, session)
+async def get_staff(staff_uid: str, session: AsyncSession = Depends(get_session)) -> dict:
+    staff = await staff_service.get_staff(staff_uid, session)
 
     return staff
 
 
 @staff_router.get("/all-staff", status_code=status.HTTP_200_OK)
 async def get_all_staffs(session: AsyncSession = Depends(get_session)):
-    all_staffs = await staff_service.get_all_staffs(session)
+    all_staffs = await staff_service.get_all_staff(session)
 
     return all_staffs
+
+
+@staff_router.patch("/sid/{staff_uid}", response_model=StaffModel)
+async def update_staff(
+    staff_uid: str, 
+    staff_update_data: StaffUpdateModel,  
+    session: AsyncSession = Depends(get_session)
+) -> dict:
+    
+    updated_staff = await staff_service.update_staff(staff_uid, staff_update_data, session)
+
+    if updated_staff is None:
+        raise HTTPException(detail="Staff not found", status_code=status.HTTP_404_NOT_FOUND)
+    else:
+        return updated_staff

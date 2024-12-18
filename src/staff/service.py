@@ -3,7 +3,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlmodel import desc, select
 
 from .models import Staff
-from .schemas import StaffCreateModel
+from .schemas import StaffCreateModel, StaffUpdateModel
 from .utils import get_random_number, generate_random_password, get_password_hash
 
 
@@ -59,7 +59,7 @@ class StaffService:
         return True if staff is not None else False
     
 
-    async def get_all_staffs(session: AsyncSession):
+    async def get_all_staff(session: AsyncSession):
         statement = select(Staff).limit(10)
 
         result = await session.exec(statement)
@@ -67,7 +67,7 @@ class StaffService:
         return result.all()
     
 
-    async def get_one_staff(staff_uid: str, session: AsyncSession):
+    async def get_staff(staff_uid: str, session: AsyncSession):
         statement = select(Staff).where(Staff.uid == staff_uid)
 
         result = await session.exec(statement)
@@ -89,3 +89,23 @@ class StaffService:
             return None
         else:
             return all_role_staffs
+        
+
+    async def update_staff(
+            staff_uid: str, update_data: StaffUpdateModel, session: AsyncSession):
+        
+        staff_to_update = await StaffService.get_staff(staff_uid, session)
+
+        if staff_to_update is not None:
+            staff_update_data_dict = update_data.model_dump()
+
+            for key, value in staff_update_data_dict.items():
+                setattr(staff_to_update, key, value)
+
+            staff_to_update.updated_at = datetime.now()
+
+            await session.commit()
+
+            return staff_to_update
+        else:
+            return None
