@@ -52,7 +52,7 @@ async def get_all_department_staff(department_name: str, session: AsyncSession =
         return JSONResponse(
             status_code=status.HTTP_200_OK,
             content={
-                "message": "Sorry, no staff in this department yet."
+                "message": "Nothing."
             }
         )
     else:    
@@ -79,3 +79,13 @@ async def update_staff(
         raise HTTPException(detail="Staff not found", status_code=status.HTTP_404_NOT_FOUND)
     else:
         return updated_staff
+    
+
+@staff_router.delete("/sid/{staff_uid}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_staff(staff_uid: str, session: AsyncSession = Depends(get_session)) -> None:
+    staff_to_delete = await staff_service.delete_staff(staff_uid, session)
+
+    if staff_to_delete is None:
+        raise HTTPException(detail="Staff not found", status_code=status.HTTP_404_NOT_FOUND)
+    else:
+        return None

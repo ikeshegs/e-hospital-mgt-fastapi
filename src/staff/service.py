@@ -109,3 +109,16 @@ class StaffService:
             return staff_to_update
         else:
             return None
+        
+
+    async def delete_staff(staff_uid, session: AsyncSession):
+        staff_to_delete = await StaffService.get_staff(staff_uid, session)
+
+        if staff_to_delete is not None:
+            await session.delete(staff_to_delete)
+
+            await session.commit()
+            
+            return {}
+        else:
+            return None
