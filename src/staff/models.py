@@ -32,8 +32,8 @@ class Staff(SQLModel, table=True):
     )
     is_verified: bool = Field(default=False)
     is_admin: bool = Field(default=False)
+    sub_department: str
     department: str
-    role: str
     created_at: datetime = Field(
         sa_column=Column(
             TIMESTAMP,

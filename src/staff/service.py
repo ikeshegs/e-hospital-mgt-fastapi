@@ -30,11 +30,11 @@ class StaffService:
         new_staff.password = hashed_password
 
         # convert string to lowercase
-        lowercase_role = new_staff.role.lower()
-        new_staff.role = lowercase_role
-
         lowercase_department = new_staff.department.lower()
         new_staff.department = lowercase_department
+
+        lowercase_sub_department = new_staff.sub_department.lower()
+        new_staff.sub_department = lowercase_sub_department
 
         # convert DOB string to DateTime object
         new_dob = datetime.strptime(new_staff.dob, '%d/%m/%Y').date()
@@ -77,18 +77,18 @@ class StaffService:
         return staff if staff is not None else None
 
 
-    async def get_all_staffs_in_a_role(role_name: str, session: AsyncSession):
-        lowercase_role_name = role_name.lower()
-        statement = select(Staff).where(Staff.role == lowercase_role_name)
+    async def get_all_staffs_in_a_department(department_name: str, session: AsyncSession):
+        lowercase_department_name = department_name.lower()
+        statement = select(Staff).where(Staff.department == lowercase_department_name)
 
         result = await session.exec(statement)
 
-        all_role_staffs = result.all()
+        all_department_staffs = result.all()
 
-        if len(all_role_staffs) == 0:
+        if len(all_department_staffs) == 0:
             return None
         else:
-            return all_role_staffs
+            return all_department_staffs
         
 
     async def update_staff(

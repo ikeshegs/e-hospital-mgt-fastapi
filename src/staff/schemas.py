@@ -13,7 +13,7 @@ class StaffCreateModel(BaseModel):
     dob: str
     sex: str
     department: str
-    role: str
+    sub_department: str
 
     model_config = {
         "json_schema_extra": {
@@ -26,7 +26,7 @@ class StaffCreateModel(BaseModel):
                 "dob": "23/5/2005",
                 "sex": "male",
                 "department": "Medical Doctor",
-                "role": "Dentist"
+                "sub_department": "Dentist"
             }
         }
     }
@@ -46,7 +46,7 @@ class StaffModel(BaseModel):
     is_verified: bool
     is_admin: bool
     department: str
-    role: str
+    sub_department: str
     created_at: datetime
     updated_at: datetime
 
@@ -58,4 +58,4 @@ class StaffUpdateModel(BaseModel):
     phone_number: str
     is_admin: bool
     department: str
-    role: str
+    sub_department: str
