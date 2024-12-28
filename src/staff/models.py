@@ -1,8 +1,10 @@
+from __future__ import annotations # To prevent Circular ReferenceError
+
 import uuid
 import sqlalchemy.dialects.postgresql as pg
-from typing import Optional
 
-from sqlmodel import SQLModel, Field, Column, TIMESTAMP
+from typing import List, Optional
+from sqlmodel import SQLModel, Field, Column, TIMESTAMP, Relationship
 from datetime import datetime
 
 
@@ -46,7 +48,13 @@ class Staff(SQLModel, table=True):
             default=datetime.now
         )
     )
+    # staff_schedule: List["StaffSchedule"] = Relationship(back_populates="staff")
 
 
     def __repr__(self):
         return f"< Staff {self.staff_id}>"
+    
+
+from src.staff_schedule.models import StaffSchedule
+
+Staff.model_rebuild()

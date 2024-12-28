@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 
-from src.staff.router import staff_router
+from src.staff.routes import staff_router
+from src.staff_schedule.routes import staff_schedule_router
 
 
 version = "v1"
@@ -24,3 +25,4 @@ async def root():
     return {"message": "Welcome to Electronic Hospital Resource Management App"}
 
 app.include_router(staff_router, prefix=f"{api_url_prefix}/staff", tags=["Staff"])
+app.include_router(staff_schedule_router, prefix=f"{api_url_prefix}/staff/schedule", tags=["Staff Schedule"])

@@ -1,10 +1,11 @@
 from datetime import datetime
 from sqlmodel.ext.asyncio.session import AsyncSession
-from sqlmodel import desc, select
+from sqlmodel import select
 
 from .models import Staff
 from .schemas import StaffCreateModel, StaffUpdateModel
 from .utils import get_random_number, generate_random_password, get_password_hash
+from src.utils import convert_string_to_date
 
 
 class StaffService:
@@ -30,15 +31,11 @@ class StaffService:
         new_staff.password = hashed_password
 
         # convert string to lowercase
-        lowercase_department = new_staff.department.lower()
-        new_staff.department = lowercase_department
-
-        lowercase_sub_department = new_staff.sub_department.lower()
-        new_staff.sub_department = lowercase_sub_department
+        new_staff.department = new_staff.department.lower()
+        new_staff.sub_department = new_staff.sub_department.lower()
 
         # convert DOB string to DateTime object
-        new_dob = datetime.strptime(new_staff.dob, '%d/%m/%Y').date()
-        new_staff.dob = new_dob
+        new_staff.dob = convert_string_to_date(new_staff.dob)
 
         '''
         Write a loop/function to ensure that the same random number doesn't get assigned to multiple staffs
