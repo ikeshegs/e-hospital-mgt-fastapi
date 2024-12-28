@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from .schemas import StaffScheduleModel, CreateStaffScheduleModel
+from .schemas import CreateStaffScheduleModel
 from .service import StaffScheduleService
 from src.database import get_session
 

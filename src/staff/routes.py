@@ -1,4 +1,3 @@
-from typing import Optional, List
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel.ext.asyncio.session import AsyncSession
 from fastapi.responses import JSONResponse

@@ -1,6 +1,6 @@
 from datetime import datetime
 from sqlmodel.ext.asyncio.session import AsyncSession
-from sqlmodel import desc, select
+from sqlmodel import select
 
 from .models import Staff
 from .schemas import StaffCreateModel, StaffUpdateModel
@@ -31,11 +31,8 @@ class StaffService:
         new_staff.password = hashed_password
 
         # convert string to lowercase
-        lowercase_department = new_staff.department.lower()
-        new_staff.department = lowercase_department
-
-        lowercase_sub_department = new_staff.sub_department.lower()
-        new_staff.sub_department = lowercase_sub_department
+        new_staff.department = new_staff.department.lower()
+        new_staff.sub_department = new_staff.sub_department.lower()
 
         # convert DOB string to DateTime object
         new_staff.dob = convert_string_to_date(new_staff.dob)

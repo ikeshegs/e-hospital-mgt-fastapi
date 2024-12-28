@@ -5,7 +5,6 @@ import sqlalchemy.dialects.postgresql as pg
 
 from typing import List, Optional
 from sqlmodel import SQLModel, Field, Column, TIMESTAMP, Relationship
-from sqlalchemy.orm import Mapped
 from datetime import datetime
 
 

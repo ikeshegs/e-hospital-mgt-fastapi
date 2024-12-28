@@ -1,12 +1,7 @@
-from datetime import datetime
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from .models import StaffSchedule
-from .schemas import (
-    StaffScheduleModel, 
-    CreateStaffScheduleModel, 
-    UpdateStaffScheduleModel
-)
+from .schemas import CreateStaffScheduleModel
 from src.utils import convert_string_to_datetime
 
 
