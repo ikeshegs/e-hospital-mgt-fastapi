@@ -7,7 +7,7 @@ from .schemas import (
     CreateStaffScheduleModel, 
     UpdateStaffScheduleModel
 )
-from src.staff.service import StaffService
+from src.utils import convert_string_to_datetime
 
 
 class StaffScheduleService:
@@ -19,12 +19,8 @@ class StaffScheduleService:
         new_staff_schedule = StaffSchedule(**staff_schedule_data_dict)
 
         # convert 'start_time' & 'end_time' string to DateTime object
-        new_start_time = datetime.strptime(new_staff_schedule.start_time, '%d/%m/%Y %H:%M:%S')
-        new_staff_schedule.start_time = new_start_time
-
-        new_end_time = datetime.strptime(new_staff_schedule.end_time, '%d/%m/%Y %H:%M:%S')
-        new_staff_schedule.end_time = new_end_time
-        print(f"Debugging........ {new_staff_schedule}")
+        new_staff_schedule.start_time = convert_string_to_datetime(new_staff_schedule.start_time)
+        new_staff_schedule.end_time = convert_string_to_datetime(new_staff_schedule.end_time)
 
         session.add(new_staff_schedule)
 

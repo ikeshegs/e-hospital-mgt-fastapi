@@ -5,6 +5,7 @@ from sqlmodel import desc, select
 from .models import Staff
 from .schemas import StaffCreateModel, StaffUpdateModel
 from .utils import get_random_number, generate_random_password, get_password_hash
+from src.utils import convert_string_to_date
 
 
 class StaffService:
@@ -37,8 +38,7 @@ class StaffService:
         new_staff.sub_department = lowercase_sub_department
 
         # convert DOB string to DateTime object
-        new_dob = datetime.strptime(new_staff.dob, '%d/%m/%Y').date()
-        new_staff.dob = new_dob
+        new_staff.dob = convert_string_to_date(new_staff.dob)
 
         '''
         Write a loop/function to ensure that the same random number doesn't get assigned to multiple staffs
